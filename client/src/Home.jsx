@@ -20,14 +20,14 @@ export default function Home() {
   useEffect(() => {
     getDogs()
       .then(setDogs)
-      });
-   [];
+      },[]);
+   
 
 
   return <p>{greeting.message}</p>,
 <ul>
   {dogs.map(d => (
-    <Link to = {`/api/dogs/${d.id}`}><li key={d.id}>{d.name}</li></Link>
+    <Link to = {`/api/dogs/${d.id}`}key={d.id}><li >{d.name}</li></Link>
   ))}
 </ul>
   }
