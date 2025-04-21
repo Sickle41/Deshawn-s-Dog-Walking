@@ -1,9 +1,10 @@
 import { getGreeting } from "./apiManager";
 import { getDogs } from "./Dogs";
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 export default function Home() {
-  const [dogs, setDogs] = useState()
+  const [dogs, setDogs] = useState([])
   const [greeting, setGreeting] = useState({
     message: "Not Connected to the API",
   });
@@ -26,7 +27,7 @@ export default function Home() {
   return <p>{greeting.message}</p>,
 <ul>
   {dogs.map(d => (
-    <li key={d.id}>{d.name}</li>
+    <Link to = {`/api/dogs/${d.id}`}><li key={d.id}>{d.name}</li></Link>
   ))}
 </ul>
   }
