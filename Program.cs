@@ -1,4 +1,5 @@
 using DeshawnsDogWalking.Models.DTOs;
+using DeshawnsDogWalking.Models;
 
 List<Dogs> dogs = new List<Dogs> {
     new Dogs {
@@ -149,7 +150,7 @@ app.MapGet("/api/dogs/{id}", (int id) =>
         Name = dog.Name,
         CityId = dog.CityId,
         WalkerId = dog.WalkerId,
-        Walkers = new WalkersDTO
+        Walkers = walker == null ? null : new WalkersDTO
         {
             Id = walker.Id,
             Name = walker.Name,
@@ -163,6 +164,35 @@ app.MapGet("/api/dogs/{id}", (int id) =>
     };
 
     return Results.Ok(dogDto);
+});
+
+app.MapPost("/api/dogs", (Dogs dog) =>
+{
+    Cities city = cities.FirstOrDefault(c => c.Id == dog.CityId);
+    dog.Id = dogs.Max(dog => dog.Id ) + 1;
+    dogs.Add(dog);
+    return Results.Created($"/api/dogs/{dog.Id}", new DogsDTO{
+        Id = dog.Id,
+        Name = dog.Name,
+        CityId = dog.CityId,
+        Cities = new CitiesDTO
+        {
+            Id = city.Id,
+            Name = city.Name
+        },
+        WalkerId = null,
+        Walkers = null
+    });
+});
+
+app.MapGet("/api/cities", ()=>
+{
+  return cities.Select(c => new CitiesDTO
+  {
+    Id = c.Id,
+    Name = c.Name
+
+  });  
 });
 
 app.Run();
