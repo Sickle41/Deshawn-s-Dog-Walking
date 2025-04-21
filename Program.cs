@@ -126,4 +126,43 @@ return dogs.Select(d => new DogsDTO {
 });
 });
 
+app.MapGet("/api/dogs/{id}", (int id) =>
+{
+    var dog = dogs.FirstOrDefault(d => d.Id == id);
+
+    if (dog == null)
+    {
+        return Results.NotFound();
+    }
+
+    var city = cities.FirstOrDefault(c => c.Id == dog.CityId);
+    var walker = walkers.FirstOrDefault(w => w.Id == dog.WalkerId);
+
+    if (city == null)
+    {
+        return Results.NotFound();
+    }
+
+    var dogDto = new DogsDTO
+    {
+        Id = dog.Id,
+        Name = dog.Name,
+        CityId = dog.CityId,
+        WalkerId = dog.WalkerId,
+        Walkers = new WalkersDTO
+        {
+            Id = walker.Id,
+            Name = walker.Name,
+            CityId = walker.CityId,
+        },
+        Cities = new CitiesDTO
+        {
+            Id = city.Id,
+            Name = city.Name
+        }
+    };
+
+    return Results.Ok(dogDto);
+});
+
 app.Run();
