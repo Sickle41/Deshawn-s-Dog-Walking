@@ -6,6 +6,7 @@ import { getDogDetails } from "./Dogs.js";
 export const DogDetails = () => {
    const [dogsId, setDogsId] = useState({})
    const {id} = useParams()
+   
    useEffect (() => {
     getDogDetails(id).then(data => {
         const dogObject = data

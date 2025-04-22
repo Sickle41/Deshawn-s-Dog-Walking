@@ -27,7 +27,7 @@ export default function Home() {
   return <p>{greeting.message}</p>,
 <ul>
   {dogs.map(d => (
-    <Link to = {`/api/dogs/${d.id}`}key={d.id}><li >{d.name}</li></Link>
+    <Link to = {`/dogs/${d.id}`}key={d.id}><li >{d.name}</li></Link>
   ))}
 </ul>
   }
