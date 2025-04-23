@@ -195,6 +195,17 @@ app.MapGet("/api/cities", ()=>
   });  
 });
 
+<<<<<<< HEAD
+app.MapGet("/api/walkers", ()=> 
+{
+    return walkers.Select(w => new WalkersDTO
+    {
+        Id = w.Id,
+        Name = w.Name,
+    });
+});
+
+=======
 app.MapGet("/api/walkers", () =>
 {
     return walkers.Select(w => new WalkersDTO
@@ -205,4 +216,5 @@ app.MapGet("/api/walkers", () =>
 
     });
 });
+>>>>>>> 28722d9c77c5908dd8246411dcde1d6632d5752b
 app.Run();
