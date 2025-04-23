@@ -25,7 +25,32 @@ List<Dogs> dogs = new List<Dogs> {
         Name = "Daisy",
         CityId = 1,
         WalkerId = 1,
-    }
+    },
+    new Dogs {
+    Id = 5,
+    Name = "Rocky",
+    CityId = 2,
+    WalkerId = null,
+    },
+    new Dogs {
+        Id = 6,
+        Name = "Luna",
+        CityId = 3,
+        WalkerId = null,
+    },
+    new Dogs {
+        Id = 7,
+        Name = "Max",
+        CityId = 1,
+        WalkerId = null,
+    },
+    new Dogs {
+        Id = 8,
+        Name = "Sadie",
+        CityId = 4,
+        WalkerId = null,
+    },
+
 };
 
 List<Cities> cities = new List<Cities> {
@@ -195,17 +220,6 @@ app.MapGet("/api/cities", ()=>
   });  
 });
 
-<<<<<<< HEAD
-app.MapGet("/api/walkers", ()=> 
-{
-    return walkers.Select(w => new WalkersDTO
-    {
-        Id = w.Id,
-        Name = w.Name,
-    });
-});
-
-=======
 app.MapGet("/api/walkers", () =>
 {
     return walkers.Select(w => new WalkersDTO
@@ -216,5 +230,41 @@ app.MapGet("/api/walkers", () =>
 
     });
 });
->>>>>>> 28722d9c77c5908dd8246411dcde1d6632d5752b
+
+app.MapGet("/api/assignabledogs/{walkerId}", (int walkerId) =>
+{
+    //make a list of join tables the walker is in
+    var cityWalkerEntries = cityWalkers.Where(cw => cw.WalkerId == walkerId).ToList();
+
+    //gets us all the city ids for the walker we currently have clicked
+    var cityIds = cityWalkerEntries.Select(cw => cw.CityId).ToList();
+
+    //go through the city id ints and find the dogs w/ that city id
+    var dogsInCity = dogs.Where(d => cityIds.Contains(d.CityId) && d.WalkerId == null)
+                               .Select(d => new DogsDTO
+                               {
+                                   Id = d.Id,
+                                   Name = d.Name,
+                                   WalkerId = d.WalkerId,
+                                   CityId = d.CityId
+                               })
+                               .ToList();
+
+    return Results.Ok(dogsInCity);
+});
+
+app.MapPost("/api/dogs/{dogId}/assigned", (int dogId, Dogs dog) =>
+{
+    Dogs assignedDog = dogs.FirstOrDefault(d => d.Id == dogId);
+    if (assignedDog != null)
+    {
+        assignedDog.WalkerId = dog.WalkerId;
+        return Results.Ok(new DogsDTO{
+            Id = assignedDog.Id,
+            Name = assignedDog.Name,
+            CityId = assignedDog.CityId});
+    }
+    return Results.NotFound();
+});
+
 app.Run();
