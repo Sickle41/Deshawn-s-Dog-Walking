@@ -267,6 +267,21 @@ app.MapPost("/api/dogs/{dogId}/assigned", (int dogId, Dogs dog) =>
     return Results.NotFound();
 });
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 app.MapDelete("/api/dogs/{id}", (int id)=>
 {
     Dogs dog = dogs.FirstOrDefault(d => d.Id == id);
