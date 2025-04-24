@@ -38,3 +38,11 @@ export const addWalker = async (dogId, walkerId) => {
     }
   ).then(res=>res.json())
 }
+
+export const removeDog = async (dogId) => {
+  return fetch(`/api/dogs/${dogId}`,
+    {
+      method: "DELETE"
+    }
+  )
+}
