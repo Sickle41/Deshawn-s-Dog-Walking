@@ -267,16 +267,6 @@ app.MapPost("/api/dogs/{dogId}/assigned", (int dogId, Dogs dog) =>
     return Results.NotFound();
 });
 
-app.MapPost("/api/cities", (Cities city)=>
-{
-    city.Id = cities.Max(city => city.Id ) + 1;
-    cities.Add(city);
-    return Results.Created("/api/cities", new CitiesDTO
-    {
-        Id = city.Id,
-        Name = city.Name
-    });
-});
 
 
 
@@ -302,18 +292,6 @@ app.MapPost("/api/cities", (Cities city)=>
     });
 });
 
-
-
-app.MapDelete("/api/dogs/{id}", (int id)=>
-{
-    Dogs dog = dogs.FirstOrDefault(d => d.Id == id);
-    if (dog == null)
-    {
-        return Results.NotFound();
-    }
-    dogs.Remove(dog);
-    return Results.NoContent(); 
-});
 
 app.MapDelete("/api/walkers/{id}", (int id)=>
 {
@@ -336,5 +314,62 @@ app.MapGet("/api/walkers/{id}", (int id)=>
         Name = walker.Name,
         CityId = walker.CityId
     };
+});
+
+// app.MapPut("/api/walkers/{id}", (int id) => {
+//     Walkers walker = walkers.FirstOrDefault(w => w.Id == id);
+//     List<CityWalkers> citywalkers = cityWalkers.Where(wc => wc.WalkerId == walker.Id).ToList();
+   
+
+//    foreach (Cities city in walker.Cities)
+// {
+//     if(city == null) 
+//     return null;
+    
+//     CityWalkers newWC = new CityWalkers
+//     {
+//         WalkerId = walker.Id,
+//         CityId = city.Id
+//     };
+//     newWC.Id = cityWalkers.Count > 0 ? cityWalkers.Max(wc => wc.Id) + 1 : 1;
+//     cityWalkers.Add(newWC);
+// } return Results.Ok();
+
+// });
+
+app.MapGet("/api/citywalkers", () => {
+return cityWalkers.Select(cw => new CityWalkersDTO {
+    Id = cw.Id,
+    CityId = cw.CityId,
+    WalkerId = cw.WalkerId
+
+} );
+});
+
+app.MapPost ("/api/citywalkers", (CityWalkers citywalker) => {
+if(citywalker.CityId == 0 || citywalker.WalkerId == 0) {
+    return Results.BadRequest();
+}
+citywalker.Id = cityWalkers.Max(cw => cw.Id) + 1;
+cityWalkers.Add(citywalker);
+return Results.Created($"/api/citywalkers/{citywalker.Id}", 
+new CityWalkersDTO {
+
+Id = citywalker.Id,
+CityId = citywalker.CityId,
+WalkerId = citywalker.WalkerId
+
+}
+
+);
+});
+
+app.MapDelete ("api/citywalkers/{id}", (int id) => {
+    CityWalkers citywalker = cityWalkers.FirstOrDefault(cw => cw.Id == id);
+    if(citywalker == null) {
+        return Results.NotFound();
+    }
+    cityWalkers.Remove(citywalker);
+    return Results.Accepted();
 });
 app.Run();
