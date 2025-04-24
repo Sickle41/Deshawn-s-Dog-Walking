@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getWalkers } from "./Walkers.js";
+import { getWalkers, removeWalker } from "./Walkers.js";
 import { getCities } from "./City";
 import { Link, useNavigate } from "react-router-dom"
 
@@ -12,10 +12,7 @@ export const WalkerList = () => {
 
    
       useEffect(() => {
-          getWalkers().then((walkerArray)=> {
-           setWalkers(walkerArray)
-           setFilteredWalkers(walkerArray)
-          })
+         reFetch()
             },[]);
 
     useEffect(() => {
@@ -23,7 +20,12 @@ export const WalkerList = () => {
         .then(setCities)
     },[])
 
-   
+   const reFetch = () => {
+    getWalkers().then((walkerArray)=> {
+        setWalkers(walkerArray)
+        setFilteredWalkers(walkerArray)
+       })
+   }
    
 
     useEffect(() => {
@@ -33,6 +35,10 @@ export const WalkerList = () => {
             setFilteredWalkers(walkers)
         }
     }, [chosenCity])
+
+    const handleRemove = (walkerId) => {
+        removeWalker(walkerId).then(()=>{reFetch()})
+    }
 
     return (
         <div>
@@ -56,6 +62,7 @@ export const WalkerList = () => {
                 <div key ={w.id}>
                 <Link key={w.id} to={`/editWalker/${w.id}`}><div>{w.name}</div></Link>
                 <button onClick={() => {navigate(`/assignabledogs/${w.id}`)}}>Add Dog</button>
+                <button onClick={()=>{handleRemove(w.id)}}>Remove Walker</button>
                 </div>
             ))}
             

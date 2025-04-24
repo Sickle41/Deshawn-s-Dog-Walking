@@ -1,5 +1,5 @@
 import { getGreeting } from "./apiManager";
-import { getDogs } from "./Dogs";
+import { getDogs, removeDog } from "./Dogs";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
@@ -18,18 +18,27 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    getDogs()
-      .then(setDogs)
+    reFetch()
       },[]);
+  
+  const reFetch = ()=>{
+    getDogs()
+    .then(setDogs)
+  }
    
-
+const handleRemove = (dogId) =>{
+  removeDog(dogId).then(()=>{reFetch()})
+}
 
   return <p>{greeting.message}</p>,
-<ul>
+
+<div>
   {dogs.map(d => (
-    <Link to = {`/dogs/${d.id}`}key={d.id}><li >{d.name}</li></Link>
-  ))}
-</ul>
+    <div key={d.id}>
+    <Link to={`/dogs/${d.id}`} key={d.id}><div>{d.name}</div></Link>
+    <button onClick={()=>{handleRemove(d.id)}}>Remove</button>
+    </div>))}
+</div>
   }
   
 
