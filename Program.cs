@@ -267,4 +267,34 @@ app.MapPost("/api/dogs/{dogId}/assigned", (int dogId, Dogs dog) =>
     return Results.NotFound();
 });
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+app.MapDelete("/api/walkers/{id}", (int id)=>
+{
+    Walkers walker = walkers.FirstOrDefault(w => w.Id == id);
+    if (walker == null)
+    {
+        return Results.NotFound();
+    }
+    walkers.Remove(walker);
+    return Results.NoContent();
+});
 app.Run();
