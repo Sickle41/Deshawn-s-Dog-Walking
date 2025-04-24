@@ -291,4 +291,38 @@ app.MapDelete("/api/dogs/{id}", (int id)=>
     return Results.NoContent(); 
 });
 
+app.MapPost("/api/cities", (Cities city)=>
+{
+    city.Id = cities.Max(city => city.Id ) + 1;
+    cities.Add(city);
+    return Results.Created("/api/cities", new CitiesDTO
+    {
+        Id = city.Id,
+        Name = city.Name
+    });
+});
+
+
+
+app.MapDelete("/api/dogs/{id}", (int id)=>
+{
+    Dogs dog = dogs.FirstOrDefault(d => d.Id == id);
+    if (dog == null)
+    {
+        return Results.NotFound();
+    }
+    dogs.Remove(dog);
+    return Results.NoContent(); 
+});
+
+app.MapDelete("/api/walkers/{id}", (int id)=>
+{
+    Walkers walker = walkers.FirstOrDefault(w => w.Id == id);
+    if (walker == null)
+    {
+        return Results.NotFound();
+    }
+    walkers.Remove(walker);
+    return Results.NoContent();
+});
 app.Run();
