@@ -267,4 +267,48 @@ app.MapPost("/api/dogs/{dogId}/assigned", (int dogId, Dogs dog) =>
     return Results.NotFound();
 });
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+app.MapGet("/api/walkers/{id}", (int id)=>
+{
+    Walkers walker = walkers.FirstOrDefault(w => w.Id == id);
+    
+    return new WalkersDTO
+    {
+        Id = walker.Id,
+        Name = walker.Name,
+        CityId = walker.CityId
+    };
+});
 app.Run();
