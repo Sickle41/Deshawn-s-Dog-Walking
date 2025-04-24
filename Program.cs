@@ -278,4 +278,17 @@ app.MapPost("/api/cities", (Cities city)=>
     });
 });
 
+
+
+app.MapDelete("/api/dogs/{id}", (int id)=>
+{
+    Dogs dog = dogs.FirstOrDefault(d => d.Id == id);
+    if (dog == null)
+    {
+        return Results.NotFound();
+    }
+    dogs.Remove(dog);
+    return Results.NoContent(); 
+});
+
 app.Run();
