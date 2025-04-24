@@ -267,18 +267,16 @@ app.MapPost("/api/dogs/{dogId}/assigned", (int dogId, Dogs dog) =>
     return Results.NotFound();
 });
 
-
-
-
-
-
-
-
-
-
-
-
-
+app.MapPost("/api/cities", (Cities city)=>
+{
+    city.Id = cities.Max(city => city.Id ) + 1;
+    cities.Add(city);
+    return Results.Created("/api/cities", new CitiesDTO
+    {
+        Id = city.Id,
+        Name = city.Name
+    });
+});
 
 
 
