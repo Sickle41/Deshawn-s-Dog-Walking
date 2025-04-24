@@ -325,4 +325,16 @@ app.MapDelete("/api/walkers/{id}", (int id)=>
     walkers.Remove(walker);
     return Results.NoContent();
 });
+
+app.MapGet("/api/walkers/{id}", (int id)=>
+{
+    Walkers walker = walkers.FirstOrDefault(w => w.Id == id);
+    
+    return new WalkersDTO
+    {
+        Id = walker.Id,
+        Name = walker.Name,
+        CityId = walker.CityId
+    };
+});
 app.Run();

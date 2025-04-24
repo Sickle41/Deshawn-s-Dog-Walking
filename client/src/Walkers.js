@@ -4,6 +4,20 @@ export const getWalkers = async () => {
   };
 
 
+
+
+
+
+
+
+
+
+
+  export const getWalkerById = async (id) => {
+    const res = await fetch(`/api/walkers/${id}`);
+    return res.json();
+  }
+  
   export const removeWalker = async (id) => {
     const res = await fetch(`/api/walkers/${id}`,
       {
