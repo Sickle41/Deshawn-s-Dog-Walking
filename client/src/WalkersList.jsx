@@ -41,6 +41,7 @@ export const WalkerList = () => {
 
    
 
+
    useEffect(() => {
     // If a city is selected, filter walkers based on cityWalkers table
     if (chosenCity?.cityId) {
@@ -60,6 +61,7 @@ export const WalkerList = () => {
         setFilteredWalkers(walkers);
     }
 }, [chosenCity, walkers, cityWalkers]);
+
 
     const handleRemove = (walkerId) => {
         removeWalker(walkerId).then(()=>{reFetch()})
