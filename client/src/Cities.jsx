@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import { addCity, getCities } from "./City.js"
 import { useNavigate } from "react-router-dom"
+import { getWalkers } from "./Walkers.js"
 
 
 export const Cities = () => {

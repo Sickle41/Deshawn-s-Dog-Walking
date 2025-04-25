@@ -1,15 +1,24 @@
 import { useEffect, useState } from "react"
-import { useParams } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import { getWalkerById } from "./Walkers.js"
 import { getCities } from "./City.js"
+import { addCityWalker, deleteCityWalker, getCityWalkers } from "./CityWalkers.js"
+
+
 
 export const EditWalker = () => {
     const {walkerId} = useParams()
     const [walker, setWalker] = useState({})
     const [allCities, setAllCities] = useState([])
+    const [cityWalkers, setCityWalkers] = useState([])
+    const navigate = useNavigate()
+    
     useEffect(()=>{
         getWalkerById(walkerId).then(res=>{
             setWalker(res)
+        })
+        getCityWalkers().then(res => {
+            setCityWalkers(res)
         })
     },[])
 
@@ -18,6 +27,27 @@ export const EditWalker = () => {
             setAllCities(cityArray)
         })
     },[])
+
+    const handleCheckMark = (cityId) => {
+      const jointableId = cityWalkers.find(cw => cw.cityId === cityId && cw.walkerId == walkerId)
+      if(jointableId == undefined) {
+        addCityWalker({cityId:cityId, walkerId:walkerId }).then( c => {
+            getCityWalkers().then(res => {
+                setCityWalkers(res)
+            })
+        })
+      } 
+      else {
+        deleteCityWalker(jointableId.id).then( c => {
+            getCityWalkers().then(res => {
+                setCityWalkers(res)
+            })
+      })
+      }
+
+     
+
+    }
 
     return  (
         <div>
@@ -31,9 +61,17 @@ export const EditWalker = () => {
             {allCities.map(cities=>
                 <div key={cities.id}>
                 <div key={cities.id}>{cities.name}</div>
-                <input type="checkbox" />
+                <input type="checkbox"
+                onChange={() => {
+                    handleCheckMark(cities.id)
+                }}
+                />
                 </div>
             )}
+            <button onClick={() => {
+                navigate("/walkers")
+            }}>
+                Save Changes</button>
         </div>
     )
 }

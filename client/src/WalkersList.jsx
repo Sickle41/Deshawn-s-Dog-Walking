@@ -2,12 +2,14 @@ import { useEffect, useState } from "react";
 import { getWalkers, removeWalker } from "./Walkers.js";
 import { getCities } from "./City";
 import { Link, useNavigate } from "react-router-dom"
+import { getCityWalkers } from "./CityWalkers.js";
 
 export const WalkerList = () => {
     const [walkers, setWalkers] = useState([])
     const [cities, setCities] = useState([])
     const [chosenCity, setChosenCity] = useState({})
     const [filteredWalkers, setFilteredWalkers] = useState([])
+    const [cityWalkers, setCityWalkers] = useState([])
     const navigate = useNavigate()
 
    
@@ -26,18 +28,28 @@ export const WalkerList = () => {
         setFilteredWalkers(walkerArray)
        })
    }
-   
 
-  useEffect(() => {
-    if (!chosenCity?.cityId || chosenCity.cityId === 0) {
-        setFilteredWalkers(walkers)
-    } else {
-        const matchingCityWalkers = cityWalkers.filter(cw => cw.cityId === chosenCity.cityId)
-        const walkerIdsForCity = matchingCityWalkers.map(cw => cw.walkerId)
-        const walkersInCity = walkers.filter(walker => walkerIdsForCity.includes(walker.id))
-        setFilteredWalkers(walkersInCity)
-    }
-  }, [chosenCity, cityWalkers, walkers])
+   useEffect(() => {
+    getCityWalkers().then((cityWalkerArray) => {
+        setCityWalkers(cityWalkerArray)
+    })
+   }, [])
+
+   useEffect(() => {
+  
+
+   }, [])
+
+    useEffect(() => {
+        const filteredByCityWalker = walkers.filter(w => w.id === cityWalkers.walkerId)
+        setCityWalkers(filteredByCityWalker)
+        
+        const filterByCity = walkers.filter(walker => walker.cityId === chosenCity?.cityId )
+        setFilteredWalkers(filterByCity)
+        if(!chosenCity?.cityId) {
+            setFilteredWalkers(walkers)
+        }
+    }, [chosenCity])
 
     const handleRemove = (walkerId) => {
         removeWalker(walkerId).then(()=>{reFetch()})
