@@ -8,7 +8,14 @@ export const deleteCityWalker = async (id) => {
     {
         method: "DELETE"
     })
-    return res.json();
+    
+    const text = await res.text();
+    if (text === "") {
+        return null;
+    } else {
+        console.log("Unexpected response from deleteCityWalker:", text);
+        return null;
+    }
 }
 export const addCityWalker = async (citywalker) => {
     return fetch("/api/citywalkers",

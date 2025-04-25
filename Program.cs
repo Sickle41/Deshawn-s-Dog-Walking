@@ -1,5 +1,6 @@
 using DeshawnsDogWalking.Models.DTOs;
 using DeshawnsDogWalking.Models;
+using Microsoft.AspNetCore.Authorization.Infrastructure;
 
 List<Dogs> dogs = new List<Dogs> {
     new Dogs {
@@ -314,6 +315,17 @@ app.MapGet("/api/walkers/{id}", (int id)=>
         Name = walker.Name,
         CityId = walker.CityId
     };
+});
+
+app.MapPut("api/walkers/{id}" , (int id, Walkers walker) => {
+Walkers updatedWalker = walkers.FirstOrDefault(w => w.Id == id);
+
+    updatedWalker.Name = walker.Name;
+
+    return Results.NoContent();
+
+    
+
 });
 
 // app.MapPut("/api/walkers/{id}", (int id) => {

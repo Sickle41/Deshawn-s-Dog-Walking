@@ -22,12 +22,16 @@ export const WalkerList = () => {
         .then(setCities)
     },[])
 
-   const reFetch = () => {
-    getWalkers().then((walkerArray)=> {
-        setWalkers(walkerArray)
-        setFilteredWalkers(walkerArray)
-       })
-   }
+    const reFetch = () => {
+        getWalkers().then((walkerArray) => {
+            setWalkers(walkerArray);
+            setFilteredWalkers(walkerArray);
+        });
+        
+        getCityWalkers().then((cityWalkerArray) => {
+            setCityWalkers(cityWalkerArray);
+        });
+    }
 
    useEffect(() => {
     getCityWalkers().then((cityWalkerArray) => {
@@ -35,21 +39,27 @@ export const WalkerList = () => {
     })
    }, [])
 
+   
+
    useEffect(() => {
-  
-
-   }, [])
-
-    useEffect(() => {
-        const filteredByCityWalker = walkers.filter(w => w.id === cityWalkers.walkerId)
-        setCityWalkers(filteredByCityWalker)
+    // If a city is selected, filter walkers based on cityWalkers table
+    if (chosenCity?.cityId) {
+        // Find all walker IDs assigned to the selected city
+        const walkerIdsForCity = cityWalkers
+            .filter(cw => cw.cityId === chosenCity.cityId)
+            .map(cw => cw.walkerId);
+            
+        // Filter walkers based on those IDs
+        const filterByCity = walkers.filter(walker => 
+            walkerIdsForCity.includes(walker.id)
+        );
         
-        const filterByCity = walkers.filter(walker => walker.cityId === chosenCity?.cityId )
-        setFilteredWalkers(filterByCity)
-        if(!chosenCity?.cityId) {
-            setFilteredWalkers(walkers)
-        }
-    }, [chosenCity])
+        setFilteredWalkers(filterByCity);
+    } else {
+        // If no city is selected, show all walkers
+        setFilteredWalkers(walkers);
+    }
+}, [chosenCity, walkers, cityWalkers]);
 
     const handleRemove = (walkerId) => {
         removeWalker(walkerId).then(()=>{reFetch()})
