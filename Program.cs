@@ -314,4 +314,25 @@ app.MapGet("/api/walkers/{id}", (int id)=>
         CityId = walker.CityId
     };
 });
+
+app.MapPost("/api/walkers/{walkerId}/cities", (int walkerId, List<int> cityIds) =>
+{
+    // Logic to update walker's cities
+    // 1. Remove existing city walkers for the walker
+    cityWalkers.RemoveAll(cw => cw.WalkerId == walkerId);
+
+    // 2. Add new city walkers for the walker
+    foreach (int cityId in cityIds)
+    {
+        cityWalkers.Add(new CityWalkers
+        {
+            Id = cityWalkers.Max(cw => cw.Id) + 1,
+            CityId = cityId,
+            WalkerId = walkerId
+        });
+    }
+
+    return Results.Ok();
+});
+
 app.Run();
