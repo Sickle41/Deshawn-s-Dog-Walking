@@ -28,13 +28,16 @@ export const WalkerList = () => {
    }
    
 
-    useEffect(() => {
-        const filterByCity = walkers.filter(walker => walker.cityId === chosenCity?.cityId)
-        setFilteredWalkers(filterByCity)
-        if(!chosenCity?.cityId) {
-            setFilteredWalkers(walkers)
-        }
-    }, [chosenCity])
+  useEffect(() => {
+    if (!chosenCity?.cityId || chosenCity.cityId === 0) {
+        setFilteredWalkers(walkers)
+    } else {
+        const matchingCityWalkers = cityWalkers.filter(cw => cw.cityId === chosenCity.cityId)
+        const walkerIdsForCity = matchingCityWalkers.map(cw => cw.walkerId)
+        const walkersInCity = walkers.filter(walker => walkerIdsForCity.includes(walker.id))
+        setFilteredWalkers(walkersInCity)
+    }
+  }, [chosenCity, cityWalkers, walkers])
 
     const handleRemove = (walkerId) => {
         removeWalker(walkerId).then(()=>{reFetch()})
