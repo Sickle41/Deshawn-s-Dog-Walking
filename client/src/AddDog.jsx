@@ -24,7 +24,7 @@ export const AddDog = () => {
         cityId : chosenCity.cityId
     }
     saveNewDog(newDog).then(res => {
-      navigate(`/api/dogs/${res.id}`)  
+      navigate(`/dogs/${res.id}`)  
     })
    }
     

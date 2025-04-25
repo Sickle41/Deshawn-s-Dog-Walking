@@ -22,12 +22,16 @@ export const WalkerList = () => {
         .then(setCities)
     },[])
 
-   const reFetch = () => {
-    getWalkers().then((walkerArray)=> {
-        setWalkers(walkerArray)
-        setFilteredWalkers(walkerArray)
-       })
-   }
+    const reFetch = () => {
+        getWalkers().then((walkerArray) => {
+            setWalkers(walkerArray);
+            setFilteredWalkers(walkerArray);
+        });
+        
+        getCityWalkers().then((cityWalkerArray) => {
+            setCityWalkers(cityWalkerArray);
+        });
+    }
 
    useEffect(() => {
     getCityWalkers().then((cityWalkerArray) => {
@@ -35,23 +39,29 @@ export const WalkerList = () => {
     })
    }, [])
 
+   
+
+
    useEffect(() => {
-  
+    // If a city is selected, filter walkers based on cityWalkers table
+    if (chosenCity?.cityId) {
+        // Find all walker IDs assigned to the selected city
+        const walkerIdsForCity = cityWalkers
+            .filter(cw => cw.cityId === chosenCity.cityId)
+            .map(cw => cw.walkerId);
+            
+        // Filter walkers based on those IDs
+        const filterByCity = walkers.filter(walker => 
+            walkerIdsForCity.includes(walker.id)
+        );
+        
+        setFilteredWalkers(filterByCity);
+    } else {
+        // If no city is selected, show all walkers
+        setFilteredWalkers(walkers);
+    }
+}, [chosenCity, walkers, cityWalkers]);
 
-   }, [])
-
-
-
-    useEffect(() => {
-        if (!chosenCity?.cityId || chosenCity.cityId === 0) {
-            setFilteredWalkers(walkers)
-        } else {
-            const matchingCityWalkers = cityWalkers.filter(cw => cw.cityId === chosenCity.cityId)
-            const walkerIdsForCity = matchingCityWalkers.map(cw => cw.walkerId)
-            const walkersInCity = walkers.filter(walker => walkerIdsForCity.includes(walker.id))
-            setFilteredWalkers(walkersInCity)
-        }
-      }, [chosenCity, cityWalkers, walkers])
 
     const handleRemove = (walkerId) => {
         removeWalker(walkerId).then(()=>{reFetch()})
